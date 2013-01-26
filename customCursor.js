@@ -299,19 +299,10 @@
 	function CursorRegistry() {
 		this.listOfNodes = [];
 		this.listOfCursors = [];
-
-		this.cursors = [];
 	}
 	CursorRegistry.prototype = {
 		isCursor: function (cursor) {
 			return cursor && cursor instanceof Cursor;
-		},
-		register: function (cursor) {
-			this.cursors.push(cursor);
-		},
-		deregister: function (cursor) {
-			var i = find(this.cursors, cursor);
-			this.cursors.splice(index, 1);
 		},
 		attachCursor: function (node, cursor) {
 			if (node && node.nodeType === 1 && this.isCursor(cursor)) {
@@ -334,10 +325,9 @@
 				}
 			}
 		},
-		delete: function (cursor) {
+		destroy: function (cursor) {
 			if (this.isCursor(cursor)) {
 				cursor.removeElements(cursor.elements);
-				this.deregister(cursor);
 				delete cursor;
 			}
 		}
@@ -369,8 +359,6 @@
 		this._mousemove = bind(this._mousemove, this);
 		this._followCursor = bind(this._followCursor, this);
 		this._hideCursor = bind(this._hideCursor, this);
-
-		cursorRegistry.register(this);
 	}
 	Cursor.prototype = {
 		setPosition: function(x,y) {
@@ -378,6 +366,11 @@
 			this.position = {
 				x: typeof x === "number" ? x : (previous.x || 0),
 				y: typeof y === "number" ? y : (previous.y || 0)
+			}
+			if (this.type === "html") {
+				var style = this.source.style;
+				style.marginTop = "-" + this.position.y + "px";
+				style.marginLeft = "-" + this.position.x + "px";
 			}
 		},
 		setSource: function (source, setOriginal) {
@@ -610,10 +603,18 @@
 					cursorRegistry.detachCursor(node);
 				}
 			}
+		},
+		removeElements: function (nodeList) {
+			if (nodeList && nodeList.length) {
+				each(nodeList, function (i,n) {
+					this.removeElement(n);
+				}, this);
+			}
+		},
+		destroy: function () {
+			cursorRegistry.destroy(this);
 		}
 	}
 
 	window.CustomCursor = Cursor;
-
-	return Cursor;
 })(window, window.document);
