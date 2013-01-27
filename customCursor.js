@@ -1,4 +1,5 @@
 (function() {
+    // Kudos to Erik Möller from Opera for this rAF shim
     var lastTime = 0;
     var vendors = ['ms', 'moz', 'webkit', 'o'];
     for(var x = 0, l=vendors.length; x < l && !window.requestAnimationFrame; ++x) {
@@ -26,20 +27,11 @@
 }());
 (function(window, document, undefined) {
 
-	var body = document.body;
+	var body = document.body; // shorthand reference
 
-	// Borrowed from jQuery
-	var coreTrim = "".trim,
-		rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,
-		trim = coreTrim && !coreTrim.call("\uFEFF\xA0") ?
-			function(text) {
-				return text == null ? "" : coreTrim.call( text );
-			} :
-			// Otherwise use our own trimming functionality
-			function(text) {
-				return text == null ? "" : ( text + "" ).replace( rtrim, "" );
-			}
-
+	// Everybody needs an each-Function. Now I know, why 
+	// every single library offers one. It's indeed really
+	// useful
 	var each = function (list, iterator, context, r) {
 		if (list && list.length) {
 			for (var i=0, l=list.length; i<l; i++) {
@@ -58,17 +50,26 @@
 		}
 	};
 
+	// This will look through your list and search for obj.
+	// It gives back the index or -1, if it couldn't find
+	// anything.
 	var find = function (list, obj) {
 		var index = -1;
-		each(list, function (i,o) {
-			if (o === obj) {
-				index = i;
-				return true;
-			}
-		}, this);
+		if (list.indexOf) {
+			index = list.indexOf(obj);
+		} else {
+			each(list, function (i,o) {
+				if (o === obj) {
+					index = i;
+					return true;
+				}
+			}, this);
+		}
 		return index;
 	};
 
+	// Binds a function to a context. Like jQuery.proxy.
+	// Uses the native bind if available
 	var bind = function (fn, context) {
 		if (Function.prototype.bind && fn instanceof Function && fn.bind === Function.prototype.bind) {
 			return fn.bind(context);
@@ -81,7 +82,7 @@
 	/**
 	 * Borrowed from h5utils.js and altered.
 	 */
-	var listOfAttachedEvents = {};
+	var listOfAttachedEvents = {}; // This is for old IE's. Just keep on reading.
 	var addEvent = (function () {
 	  if (document.addEventListener) {
 	    return function (el, type, fn, captures) {
@@ -96,6 +97,13 @@
 	  } else {
 	    return function (el, type, fn, captures) {
 	      if (el && el.nodeName || el === window) {
+	      	// Now, here we go. Instead of adding fn as the listener,
+	      	// we're creating our own function which eventually calls
+	      	// fn. However, We can't call detachEvent('on'+type, fn),
+	      	// because fn is not the listener we attached.
+	      	// That's why we're storing our listener-Functions. Later, 
+	      	// when we want to detach a function, we filter it out of
+	      	// the listOfAttachedEvents and can detach it then.
 	      	var listener = function () { return fn.call(el, window.event); };
 	      	if (!listOfAttachedEvents[type]) {
 	      		listOfAttachedEvents[type] = [];
