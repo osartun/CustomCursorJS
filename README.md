@@ -5,7 +5,7 @@ CustomCursor.js
 
 Are you writing a desktop-like web application and want to control the cursor's look and feel? Why, yes, of course! The cursor is an important part of the user experience. You noticed that the CSS `cursor` property only has limited capabilities. You tried using the `url()` value, but messed up the different file types and got stuck, when you tested it in Opera.
 *CustomCursor.js* is meant to overcome these limitations.
-It detects whether the browser is capable of using 
+It detects whether the browser is capable of using the `url()`-value and creates an HTML-based *fake cursor* in case it's not.
 
 ## Awesomeness
 
