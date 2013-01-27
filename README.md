@@ -37,7 +37,7 @@ Set the cursor to an element:
     myCursor.setElement(document.getElementById("myTargetNode")); // Set one element with setElement
     myCursor.setElements(document.querySelectorAll("[data-cursor=mycursor]")); // Set multiple elements with setElements
 
-An internal cursor registry will keep track of which cursor is attached to which element and will make sure that an element is not attached to two cursor's at the same time.
+An internal *cursor registry* will keep track of which cursor is attached to which element and makes sure that an element is not attached to two cursors at the same time.
 
 Remove an element from a cursor:
 
