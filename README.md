@@ -9,7 +9,7 @@ It detects whether the browser is capable of using the `url()`-value and creates
 
 ## Awesomeness
 
-+ Native first — Uses native `url()`-cursor wherever possible
++ Native first — Uses the CSS-based `url()`-cursor wherever possible
 + requestAnimationFrame goodness — To improve the overall fluency it syncs its rendering with the browser's repaint cycle if possible
 + canvas support — If given a canvas element and detected support for cursor-images it sets the `url()`-value to a base64-representation of the canvas' content
 + Maximum efficiency — Performance was the number one key feature tried to gain throughout the whole development
