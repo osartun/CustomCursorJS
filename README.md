@@ -11,7 +11,7 @@ It detects whether the browser is capable of using the `url()`-value and creates
 
 + Maximum efficiency — Falls back to native `url()`-cursor wherever possible
 + requestAnimationFrame goodness — To improve the overall fluency it syncs its rendering with the browser's repaint cycle if possible
-+ canvas support — If given a canvas element and detected support for cursor-images it sets the `url()`-value to a base64-representation of the canvas' context
++ canvas support — If given a canvas element and detected support for cursor-images it sets the `url()`-value to a base64-representation of the canvas' content
 + Performance everywhere — Performance was the number one key feature tried to gain throughout the whole development
 + Pure VanillaJS — No dependencies at all. No Mootools, no PrototypeJS and no, not even jQuery! It all works at the browser's lowest possible layer
 
